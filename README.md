@@ -1,2 +1,2 @@
 # PCI_2021
-Disciplina 
+Disciplina de projeção e conceção de instrumentos. Projeto de eletrónica, arduino e motores.
