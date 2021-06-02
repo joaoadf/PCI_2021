@@ -22,12 +22,25 @@
 const int stepsPerRevolution = 64;  // change this to fit the number of steps per revolution
 // for your motor
 
+
 // initialize the stepper library on pins 8 through 11:
+
+//IN1 ----> 8
+//IN2 ----> 9
+//IN3 ----> 10
+//IN4 ----> 11
 Stepper myStepper(stepsPerRevolution, 8, 9, 10, 11);
 
 int stepCount = 0;  // number of steps the motor has taken
 int motorSpeed = 0;
-int halfPotentiometer = 511;
+int halfPotentiometer = 511; //ponto médio do potenciometrio
+int sensorReading = 0;
+
+//Velocidades minimas e máximas obtidas empiricamente
+//O motor nao roda para outras velocidade em 64 passos por rotação completa
+int minSpeed = 70;
+int maxSpeed = 82;
+
 void setup() {
   // nothing to do inside the setup
   Serial.begin(9600);
@@ -35,15 +48,14 @@ void setup() {
 
 void loop() {
   // read the sensor value:
-  int sensorReading = analogRead(A0);
+  sensorReading = analogRead(A0);
   // map it to a range from 0 to 100:
   Serial.print("Potenciomentro: ");
   Serial.println(sensorReading);
   
-  motorSpeed = map(sensorReading, 0, 1023, 0, 100);
   
   if(sensorReading < halfPotentiometer){
-    motorSpeed = map(sensorReading, 0, halfPotentiometer, 70, 82);
+    motorSpeed = map(sensorReading, 0, halfPotentiometer, minSpeed, maxSpeed);
     Serial.print("Velocidade: ");
     Serial.println(motorSpeed);
     myStepper.setSpeed(motorSpeed);
@@ -54,10 +66,19 @@ void loop() {
     } 
     
   } else if (sensorReading > halfPotentiometer){
-    motorSpeed = map(sensorReading, halfPotentiometer, 1023, 70, 82);
+    motorSpeed = map(sensorReading, halfPotentiometer, 1023, minSpeed, maxSpeed);
     Serial.print("Velocidade: ");
     Serial.println(motorSpeed);
     myStepper.setSpeed(motorSpeed);
+    /* Para velocidades muito baixa, o motor perder muito tempo no metodo .step()
+     * Este método só para de funcionar, após realizar todos os passos que lhe foi pedido.
+     * 
+     * Exemplo:
+     * 
+     * myStepper.setSpeed(20) ----> Velocidade de 20% 
+     * myStepper.step(200) ----> Fazer 200 passos (Código para aqui até fazer os 200 passos)
+     * Quanto maior a velocidade, mais depressa faz os passos.
+    */
     if(motorSpeed < 20) {
       myStepper.step(20); 
     } else {
