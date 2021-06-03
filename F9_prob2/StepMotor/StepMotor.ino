@@ -25,11 +25,11 @@ const int stepsPerRevolution = 64;  // change this to fit the number of steps pe
 
 // initialize the stepper library on pins 8 through 11:
 
-//IN1 ----> 8
-//IN2 ----> 9
-//IN3 ----> 10
-//IN4 ----> 11
-Stepper myStepper(stepsPerRevolution, 8, 9, 10, 11);
+//IN1 ----> 11
+//IN2 ----> 10
+//IN3 ----> 9
+//IN4 ----> 8
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
 
 int stepCount = 0;  // number of steps the motor has taken
 int motorSpeed = 0;
