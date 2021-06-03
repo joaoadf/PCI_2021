@@ -55,14 +55,14 @@ void loop() {
   
   
   if(sensorReading < halfPotentiometer){
-    motorSpeed = map(sensorReading, 0, halfPotentiometer, minSpeed, maxSpeed);
+    motorSpeed = map(sensorReading, 0, halfPotentiometer, maxSpeed, minSpeed);
     Serial.print("Velocidade: ");
     Serial.println(motorSpeed);
     myStepper.setSpeed(motorSpeed);
     if(motorSpeed < 20) {
       myStepper.step(20); 
     } else {
-      myStepper.step(200); 
+      myStepper.step(-200); 
     } 
     
   } else if (sensorReading > halfPotentiometer){
