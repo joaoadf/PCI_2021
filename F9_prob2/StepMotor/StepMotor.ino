@@ -19,17 +19,17 @@
 
 #include <Stepper.h>
 
-const int stepsPerRevolution = 64;  // change this to fit the number of steps per revolution
+const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
 // for your motor
 
 
 // initialize the stepper library on pins 8 through 11:
 
-//IN1 ----> 8
-//IN2 ----> 9
-//IN3 ----> 10
-//IN4 ----> 11
-Stepper myStepper(stepsPerRevolution, 8, 9, 10, 11);
+//IN1 ----> 11
+//IN2 ----> 10
+//IN3 ----> 9
+//IN4 ----> 8
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
 
 int stepCount = 0;  // number of steps the motor has taken
 int motorSpeed = 0;
@@ -38,8 +38,8 @@ int sensorReading = 0;
 
 //Velocidades minimas e máximas obtidas empiricamente
 //O motor nao roda para outras velocidade em 64 passos por rotação completa
-int minSpeed = 70;
-int maxSpeed = 82;
+int minSpeed = 0;
+int maxSpeed = 15;
 
 void setup() {
   // nothing to do inside the setup
@@ -55,15 +55,13 @@ void loop() {
   
   
   if(sensorReading < halfPotentiometer){
-    motorSpeed = map(sensorReading, 0, halfPotentiometer, minSpeed, maxSpeed);
+    motorSpeed = map(sensorReading, 0, halfPotentiometer, maxSpeed, minSpeed);
     Serial.print("Velocidade: ");
     Serial.println(motorSpeed);
     myStepper.setSpeed(motorSpeed);
-    if(motorSpeed < 20) {
-      myStepper.step(20); 
-    } else {
-      myStepper.step(200); 
-    } 
+    if(motorSpeed != 0) {
+      myStepper.step(-64); 
+    }
     
   } else if (sensorReading > halfPotentiometer){
     motorSpeed = map(sensorReading, halfPotentiometer, 1023, minSpeed, maxSpeed);
@@ -79,11 +77,9 @@ void loop() {
      * myStepper.step(200) ----> Fazer 200 passos (Código para aqui até fazer os 200 passos)
      * Quanto maior a velocidade, mais depressa faz os passos.
     */
-    if(motorSpeed < 20) {
-      myStepper.step(20); 
-    } else {
-      myStepper.step(200); 
-    } 
+    if(motorSpeed != 0) {
+      myStepper.step(64); 
+    }
   } 
   
 
